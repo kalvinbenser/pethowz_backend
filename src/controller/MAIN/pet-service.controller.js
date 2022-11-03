@@ -41,6 +41,21 @@ exports.findAll = (req, res) => {
     });
 };
 
+exports.getAllPetServiceList = (req, res) => {
+  PetService.findAll({where:{status:1}})
+    .then((data) => {
+      RESPONSE.Success.Message = MESSAGE.SUCCESS;
+      RESPONSE.Success.data = data;
+      res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+    })
+    .catch((err) => {
+      RESPONSE.Failure.Message = err.message;
+      res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
+    });
+};
+
+
+
 exports.getPetServicePendingList = (req, res) => {
   PetService.findAll({ where: { status: 0 } })
     .then((data) => {

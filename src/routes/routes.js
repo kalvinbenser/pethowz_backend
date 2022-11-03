@@ -352,6 +352,7 @@ router.post(
 
 // --Get Pet  Service
 router.get("/getAllPetService", petserviceController.findAll);
+router.get("/getAllPetServiceList", petserviceController.getAllPetServiceList);
 
 router.get("/getPetServiceById/:pet_services_id", petserviceController.findOne);
 
@@ -403,6 +404,7 @@ router.post(
 // --Get Pet  Space
 router.get("/getAllPetSpace", petSpaceController.findAll);
 
+router.get("/getAllPetSpaceList", petSpaceController.getAllPetSpaceList);
 router.get("/getPetSpaceById/:id", petSpaceController.findOne);
 //pet space pending list
 router.get(
