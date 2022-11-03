@@ -5,10 +5,13 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
       },
       PetCategory: {
-        type: Sequelize.JSON,
+        type: Sequelize.TEXT,
         allowNull: false,
         get() {
           return JSON.parse(this.getDataValue("PetCategory"));
+        },
+        set(value) {
+          return this.setDataValue("PetCategory", JSON.stringify(value));
         }
       },
       content1: {

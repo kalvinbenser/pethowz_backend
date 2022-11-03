@@ -13,10 +13,13 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
       },
       service:{
-        type: Sequelize.JSON,
+        type: Sequelize.TEXT,
         allowNull: false,
         get() {
           return JSON.parse(this.getDataValue("service"));
+        },
+        set(value) {
+          return this.setDataValue("service", JSON.stringify(value));
         }
       },
       location: {
@@ -24,10 +27,13 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
       },
       image:{
-        type: Sequelize.JSON,
+        type: Sequelize.TEXT,
         allowNull: false,
         get() {
           return JSON.parse(this.getDataValue("image"));
+        },
+        set(value) {
+          return this.setDataValue("image", JSON.stringify(value));
         }
       },
       delStatus: {

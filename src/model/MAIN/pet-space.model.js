@@ -9,18 +9,24 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
       },
       venue_category: {
-        type: Sequelize.JSON,
+        type: Sequelize.TEXT,
         allowNull: false,
         get() {
           return JSON.parse(this.getDataValue("venue_category"));
+        },
+        set(value) {
+          return this.setDataValue("venue_category", JSON.stringify(value));
         }
        
       },
       amenities:{
-        type: Sequelize.JSON,
+        type: Sequelize.TEXT,
         allowNull: false,
         get() {
           return JSON.parse(this.getDataValue("amenities"));
+        },
+        set(value) {
+          return this.setDataValue("amenities", JSON.stringify(value));
         }
       },
       cost_per_hour: {
@@ -32,17 +38,23 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
       },
       image:{
-        type: Sequelize.JSON,
+        type: Sequelize.TEXT,
         allowNull: false,
         get() {
           return JSON.parse(this.getDataValue("image"));
+        },
+        set(value) {
+          return this.setDataValue("image", JSON.stringify(value));
         }
       },
       service:{
-        type: Sequelize.JSON,
+        type: Sequelize.TEXT,
         allowNull: true,
         get() {
           return JSON.parse(this.getDataValue("service"));
+        },
+        set(value) {
+          return this.setDataValue("service", JSON.stringify(value));
         }
       },
       delStatus: {

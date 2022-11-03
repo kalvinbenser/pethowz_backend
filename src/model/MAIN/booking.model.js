@@ -29,11 +29,15 @@ module.exports = (sequelize, Sequelize) => {
       allowNull: false,
     },
     service: {
-      type: Sequelize.JSON,
+      type: Sequelize.TEXT,
       allowNull: false,
       get() {
         return JSON.parse(this.getDataValue("service"));
+      },
+      set(value) {
+        return this.setDataValue("service", JSON.stringify(value));
       }
+
     },
     venue_name: {
       type: Sequelize.STRING,
