@@ -31,6 +31,9 @@ module.exports = (sequelize, Sequelize) => {
     service: {
       type: Sequelize.JSON,
       allowNull: false,
+      get() {
+        return JSON.parse(this.getDataValue("service"));
+      }
     },
     venue_name: {
       type: Sequelize.STRING,

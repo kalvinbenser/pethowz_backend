@@ -7,6 +7,9 @@ module.exports = (sequelize, Sequelize) => {
       PetCategory: {
         type: Sequelize.JSON,
         allowNull: false,
+        get() {
+          return JSON.parse(this.getDataValue("PetCategory"));
+        }
       },
       content1: {
         type: Sequelize.STRING,

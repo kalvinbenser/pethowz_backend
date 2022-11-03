@@ -17,9 +17,6 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
         get() {
           return JSON.parse(this.getDataValue("service"));
-        }, 
-        set(value) {
-          return this.setDataValue("service", JSON.stringify(value));
         }
       },
       location: {
@@ -29,6 +26,9 @@ module.exports = (sequelize, Sequelize) => {
       image:{
         type: Sequelize.JSON,
         allowNull: false,
+        get() {
+          return JSON.parse(this.getDataValue("image"));
+        }
       },
       delStatus: {
         type: Sequelize.BOOLEAN,

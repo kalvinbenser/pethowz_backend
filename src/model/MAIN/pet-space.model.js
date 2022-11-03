@@ -11,10 +11,17 @@ module.exports = (sequelize, Sequelize) => {
       venue_category: {
         type: Sequelize.JSON,
         allowNull: false,
+        get() {
+          return JSON.parse(this.getDataValue("venue_category"));
+        }
+       
       },
       amenities:{
         type: Sequelize.JSON,
         allowNull: false,
+        get() {
+          return JSON.parse(this.getDataValue("amenities"));
+        }
       },
       cost_per_hour: {
         type: Sequelize.INTEGER,
@@ -27,10 +34,16 @@ module.exports = (sequelize, Sequelize) => {
       image:{
         type: Sequelize.JSON,
         allowNull: false,
+        get() {
+          return JSON.parse(this.getDataValue("image"));
+        }
       },
       service:{
         type: Sequelize.JSON,
         allowNull: true,
+        get() {
+          return JSON.parse(this.getDataValue("service"));
+        }
       },
       delStatus: {
         type: Sequelize.BOOLEAN,
