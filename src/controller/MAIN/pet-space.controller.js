@@ -33,10 +33,10 @@ exports.create = (req, res) => {
 };
 
 
-exports.findAll = (req, res) => {
+exports.getAllPetSpaceList = (req, res) => {
  
 
-  PetSpace.findAll()
+  PetSpace.findAll({where:{status:1}})
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = data;
@@ -47,6 +47,21 @@ exports.findAll = (req, res) => {
       res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
     });
   };
+
+  exports.findAll = (req, res) => {
+ 
+
+    PetSpace.findAll()
+      .then((data) => {
+        RESPONSE.Success.Message = MESSAGE.SUCCESS;
+        RESPONSE.Success.data = data;
+        res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+      })
+      .catch((err) => {
+        RESPONSE.Failure.Message = err.message;
+        res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
+      });
+    };
   
 
   exports.getPetSpacePendingList = (req, res) => {

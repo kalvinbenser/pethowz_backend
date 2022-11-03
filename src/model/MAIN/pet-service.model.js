@@ -15,6 +15,12 @@ module.exports = (sequelize, Sequelize) => {
       service:{
         type: Sequelize.JSON,
         allowNull: false,
+        get() {
+          return JSON.parse(this.getDataValue("service"));
+        }, 
+        set(value) {
+          return this.setDataValue("service", JSON.stringify(value));
+        }
       },
       location: {
         type: Sequelize.STRING,
