@@ -31,7 +31,7 @@ db.sequelize
 
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to bezkoder application." });
+  res.json({ message: "Pethowz server is running" });
 });
 
 // //router
