@@ -7,7 +7,7 @@ const createSelfDescriptionSchema = yup.object({
     content2: yup.string().required(),
     content3: yup.string().required(),
     content4: yup.string().required(),
-    content5:yup.number().required(),
+    content5:yup.string().required(),
     content6:yup.string().required(),
   }),
 });
@@ -20,7 +20,7 @@ const updateSelfDescriptionSchema = yup.object({
         content2: yup.string().notRequired(),
         content3: yup.string().notRequired(),
         content4: yup.string().notRequired(),
-        content5:yup.number().notRequired(),
+        content5:yup.string().notRequired(),
         content6:yup.string().notRequired(),
       }),
 
