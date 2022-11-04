@@ -31,7 +31,7 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
       },
       content5: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         allowNull: false,
       },
       content6: {
