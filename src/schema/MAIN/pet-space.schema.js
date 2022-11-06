@@ -1,5 +1,3 @@
-
-
 const yup = require("yup");
 const createPetSpaceSchema = yup.object({
   body: yup.object({
@@ -11,13 +9,12 @@ const createPetSpaceSchema = yup.object({
     location: yup.string().required(),
     cost_per_hour: yup.number().required(),
     image: yup.array().required(),
-    service: yup.array().notRequired(),
- }),
+  }),
 });
 
 const updatePetSpaceSchema = yup.object({
   body: yup.object({
-    pet_space_id:yup.number().required(),
+    pet_space_id: yup.number().required(),
     user_id: yup.string().notRequired(),
     venue_name: yup.string().notRequired(),
     venue_category: yup.array().notRequired(),
@@ -26,9 +23,8 @@ const updatePetSpaceSchema = yup.object({
     location: yup.string().notRequired(),
     cost_per_hour: yup.number().notRequired(),
     image: yup.array().notRequired(),
-    service: yup.array().notRequired(),
-    status:yup.number().notRequired(),
+    status: yup.number().notRequired(),
   }),
 });
 
-module.exports = { createPetSpaceSchema, updatePetSpaceSchema};
+module.exports = { createPetSpaceSchema, updatePetSpaceSchema };
