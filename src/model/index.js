@@ -61,5 +61,5 @@ db.selfDescription = require("./MAIN/self-description.model")(
 );
 db.registration = require("./MAIN/registration.model")(sequelize, Sequelize);
 db.adminLogin = require("./MAIN/admin-login-masters.model")(sequelize, Sequelize);
-
+db.serviceSlot =require('./MAIN/service_slot.model')(sequelize, Sequelize);
 module.exports = db;

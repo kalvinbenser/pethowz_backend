@@ -17,7 +17,8 @@ const registrationController = require("../controller/MAIN/registration.controll
 
 const dashboardController = require("../controller/MAIN/dashboard.controller");
 const searchController = require("../controller/MAIN/search.controller");
-const adminLoginController=require("../controller/MAIN/admin-login-masters-controller")
+const adminLoginController = require("../controller/MAIN/admin-login-masters-controller");
+const serviceSlotController = require("../controller/MAIN/service-slot.controller");
 const { validate } = require("../middleware/validate");
 const SCHEMA = require("../schema");
 const router = require("express").Router();
@@ -249,6 +250,12 @@ router.post(
   serviceMastersController.create
 );
 
+router.post(
+  "/getServiceProvidersFilter",
+  serviceMastersController.getServiceProvidersFilter
+);
+
+
 // --Get Service Master
 router.get("/getAllServiceMaster", serviceMastersController.findAll);
 
@@ -453,6 +460,25 @@ router.get(
   "/getTotalBookingDashboard",
   dashboardController.getTotalBookingsDashboardHandler
 );
+
+//-----------------------------------service slot ---------------------
+router.post(
+  "/createServiceSlot",
+  validate(SCHEMA.SERVICE_SLOT.createServiceSlotSchema),
+  serviceSlotController.create
+);
+
+router.put(
+  "/updateServiceSlot/:id",
+  validate(SCHEMA.SERVICE_SLOT.updateServiceSlotSchema),
+  serviceSlotController.update
+);
+
+router.get("/getServiceSlotList", serviceSlotController.findAll);
+router.get("/getServiceSlotById/:id", serviceSlotController.findOne);
+
+
+//-----------------------------------------------------------------------
 
 //-----------------------SearchVenueAndService----------------------------------//
 router.post("/searchVenueAndService", searchController.getSearchHandler);
