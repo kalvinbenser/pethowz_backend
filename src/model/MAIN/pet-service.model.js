@@ -10,7 +10,7 @@ module.exports = (sequelize, Sequelize) => {
     },
     service_details: {
       type: Sequelize.STRING,
-      allowNull: false,
+      allowNull: true,
     },
     location: {
       type: Sequelize.STRING,
@@ -30,6 +30,12 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.BOOLEAN,
       allowNull: false,
       defaultValue:true
+    },
+    pet_space_id: {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+      defaultValue:0,
+      comment:"0 - direct petService"
     },
     delStatus: {
       type: Sequelize.BOOLEAN,

@@ -1,25 +1,42 @@
 const db = require("../../model");
 const PetService = db.petService;
+const ServiceSlot = db.serviceSlot;
+const sequelize = db.sequelize;
 
 const RESPONSE = require("../../constants/response");
 const { MESSAGE } = require("../../constants/messages");
 const { StatusCode } = require("../../constants/HttpStatusCode");
 // const Op = db.Sequelize.Op;
 
-exports.create = (req, res) => {
+exports.create = async (req, res) => {
   const pet_service = {
     user_id: req.body.user_id,
     venue_name: req.body.venue_name,
     service_details: req.body.service_details,
-    service: req.body.service,
     location: req.body.location,
     image: req.body.image,
+    pet_space_id: 0,
   };
 
-  PetService.create(pet_service)
+  let pet_service_data = [];
+
+  await PetService.create(pet_service)
+    .then((data) => {
+      pet_service_data = data.id;
+    })
+    .catch((err) => {
+      pet_service_data = err.message;
+    });
+
+  for (i in req.body.service) {
+    req.body.service[i].pet_service_id = pet_service_data;
+    req.body.service[i].type = 2;
+  }
+
+  await ServiceSlot.bulkCreate(req.body.service)
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
-      RESPONSE.Success.data = { id: data.id };
+      RESPONSE.Success.data = data;
       res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
     })
     .catch((err) => {
@@ -42,7 +59,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.getAllPetServiceList = (req, res) => {
-  PetService.findAll({where:{status:1}})
+  PetService.findAll({ where: { status: 1 } })
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = data;
@@ -53,8 +70,6 @@ exports.getAllPetServiceList = (req, res) => {
       res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
     });
 };
-
-
 
 exports.getPetServicePendingList = (req, res) => {
   PetService.findAll({ where: { status: 0 } })
