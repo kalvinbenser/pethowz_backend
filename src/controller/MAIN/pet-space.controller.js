@@ -1,12 +1,13 @@
 const db = require("../../model");
 const PetSpace = db.petSpace;
-
+const PetService = db.petService;
+const ServiceSlot = db.serviceSlot;
 const RESPONSE = require("../../constants/response");
 const { MESSAGE } = require("../../constants/messages");
 const { StatusCode } = require("../../constants/HttpStatusCode");
 // const Op = db.Sequelize.Op;
 
-exports.create = (req, res) => {
+exports.create = async(req, res) => {
  
   const pet_space = {
     user_id: req.body.user_id,
@@ -16,14 +17,48 @@ exports.create = (req, res) => {
     amenities:req.body.amenities,
     location: req.body.location,
     image: req.body.image,
-    service:req.body.service,
+   };
+
+ let pet_Space_data=[]
+
+ await PetSpace.create(pet_space)
+  .then((data) => {
+    pet_Space_data=data.id
+  })
+  .catch((err) => {
+    pet_Space_data=err.message
+  
+  });
+
+  const pet_service = {
+    user_id: req.body.user_id,
+    venue_name: req.body.venue_name,
+    service_details:" ",
+    location: req.body.location,
+    image: req.body.image,
+    pet_space_id: pet_Space_data,
   };
 
+  let pet_service_data = [];
  
-  PetSpace.create(pet_space)
+  await PetService.create(pet_service)
+    .then((data) => {
+      pet_service_data = data.id;
+    })
+    .catch((err) => {
+      pet_service_data = err.message;
+    });
+
+
+  for(i in  req.body.service){
+    req.body.service[i].pet_service_id=  pet_service_data;
+    req.body.service[i].type=1
+  }
+ 
+  await ServiceSlot.bulkCreate(req.body.service)
   .then((data) => {
     RESPONSE.Success.Message = MESSAGE.SUCCESS;
-    RESPONSE.Success.data = { id: data.id };
+    RESPONSE.Success.data = data ;
     res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
   })
   .catch((err) => {

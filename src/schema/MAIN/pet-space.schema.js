@@ -9,6 +9,7 @@ const createPetSpaceSchema = yup.object({
     location: yup.string().required(),
     cost_per_hour: yup.number().required(),
     image: yup.array().required(),
+    service: yup.array().notRequired(),
   }),
 });
 
@@ -23,7 +24,7 @@ const updatePetSpaceSchema = yup.object({
     location: yup.string().notRequired(),
     cost_per_hour: yup.number().notRequired(),
     image: yup.array().notRequired(),
-    status: yup.number().notRequired(),
+  
   }),
 });
 
