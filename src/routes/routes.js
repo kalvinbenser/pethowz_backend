@@ -362,6 +362,7 @@ router.get("/getAllPetService", petserviceController.findAll);
 router.get("/getAllPetServiceList", petserviceController.getAllPetServiceList);
 
 router.get("/getPetServiceById/:pet_services_id", petserviceController.findOne);
+router.get("/getSlotByPetServiceId/:id", petserviceController.getSlotByPetServiceId);
 
 router.get(
   "/getPetServicePendingList",

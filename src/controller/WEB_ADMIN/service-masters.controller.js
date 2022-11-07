@@ -106,11 +106,15 @@ exports.getAllServiceList = (req, res) => {
 exports.getServiceProvidersFilter = async (req, res) => {
   const keyword = req.body.service_keyword;
 
-  var query = `select ss.id as service_slot_id,ps.venue_name,sm.id as service_cat_id,sm.service_name as service_cat_name,sm.image as service_cat_image,ss.cost,ss.type as type from service_slot ss left join service_master sm on sm.id=ss.service_master_id left join pet_service  as ps on ps.id=ss.pet_service_id where sm.service_name like "%${keyword}%"`;
+  var query = `select ps.id as id,sm.service_name as service_name,ps.venue_name,ps.image,ss.cost,ss.type as type from service_slot ss left join service_master sm on sm.id=ss.service_master_id left join pet_service  as ps on ps.id=ss.pet_service_id where sm.service_name like "%${keyword}%"`;
   sequelize
     .query(query)
     .then((result) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
+      for(i in result[0]){
+        result[0][i].image=JSON.parse(result[0][i].image)
+      }
+     
       RESPONSE.Success.data = result[0];
       res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
     })
