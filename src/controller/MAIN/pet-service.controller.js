@@ -115,7 +115,7 @@ exports.getPetServiceMobileListById = (req, res) => {
 
 exports.getSlotByPetServiceId = (req, res) => {
   id = req.params.id;
-  sequelize.query(`select ss.id as slot_id,sm.service_name,ss.cost from service_slot ss left join service_master as sm on sm.id=ss.service_master_id  where pet_service_id=${id}`)
+  sequelize.query(`select ss.id as slot_id,ss.service_master_id,sm.service_name,sm.image,ss.cost from service_slot ss left join service_master as sm on sm.id=ss.service_master_id  where pet_service_id=${id}`)
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = data[0];
