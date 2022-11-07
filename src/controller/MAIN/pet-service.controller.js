@@ -111,6 +111,22 @@ exports.getPetServiceMobileListById = (req, res) => {
       res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
     });
 };
+
+
+exports.getSlotByPetServiceId = (req, res) => {
+  id = req.params.id;
+  sequelize.query(`select ss.id as slot_id,sm.service_name,ss.cost from service_slot ss left join service_master as sm on sm.id=ss.service_master_id  where pet_service_id=${id}`)
+    .then((data) => {
+      RESPONSE.Success.Message = MESSAGE.SUCCESS;
+      RESPONSE.Success.data = data[0];
+      res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+    })
+    .catch((err) => {
+      RESPONSE.Failure.Message = err.message;
+      res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
+    });
+};
+
 exports.findOne = (req, res) => {
   const pet_services_id = req.params.pet_services_id;
   PetService.findOne({ where: { id: pet_services_id } })
@@ -123,6 +139,8 @@ exports.findOne = (req, res) => {
       RESPONSE.Failure.Message = err.message;
       res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
     });
+
+  
 };
 
 exports.update = (req, res) => {
