@@ -112,10 +112,12 @@ exports.getPetServiceMobileListById = (req, res) => {
     });
 };
 
-
 exports.getSlotByPetServiceId = (req, res) => {
   id = req.params.id;
-  sequelize.query(`select ss.id as slot_id,ss.service_master_id,sm.service_name,sm.image,ss.cost from service_slot ss left join service_master as sm on sm.id=ss.service_master_id  where pet_service_id=${id}`)
+  sequelize
+    .query(
+      `select ss.id as slot_id,ss.service_master_id,sm.service_name,sm.image,ss.cost from service_slot ss left join service_master as sm on sm.id=ss.service_master_id  where pet_service_id=${id}`
+    )
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = data[0];
@@ -125,6 +127,49 @@ exports.getSlotByPetServiceId = (req, res) => {
       RESPONSE.Failure.Message = err.message;
       res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
     });
+};
+
+exports.getSlotByPetSpaceId = async (req, res) => {
+  id = req.params.id;
+  const service_id = await getSlotpetServiceById(id);
+//console.log("service_id",service_id)
+  if (service_id != 0) {
+    sequelize
+      .query(
+        `select ss.id as slot_id,ss.service_master_id,sm.service_name,sm.image,ss.cost from service_slot ss left join service_master as sm on sm.id=ss.service_master_id  where ss.pet_service_id=${service_id}`
+      )
+      .then((data) => {
+        RESPONSE.Success.Message = MESSAGE.SUCCESS;
+        console.log("data",data)
+        RESPONSE.Success.data = data[0];
+        res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+      })
+      .catch((err) => {
+        RESPONSE.Success.Message = MESSAGE.SUCCESS;
+        RESPONSE.Success.data = [];
+        res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+      });
+  } else {
+        RESPONSE.Success.Message = MESSAGE.SUCCESS;
+        RESPONSE.Success.data = [];
+        res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+  }
+};
+
+const getSlotpetServiceById = async (id) => {
+  return new Promise(async (resolve) => {
+    await PetService.findOne({ where: { id: id } })
+      .then((data) => {
+        if (data) {
+          resolve(data.id);
+        } else {
+          resolve(0);
+        }
+      })
+      .catch((err) => {
+        resolve(0);
+      });
+  });
 };
 
 exports.findOne = (req, res) => {
@@ -139,8 +184,6 @@ exports.findOne = (req, res) => {
       RESPONSE.Failure.Message = err.message;
       res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
     });
-
-  
 };
 
 exports.update = (req, res) => {

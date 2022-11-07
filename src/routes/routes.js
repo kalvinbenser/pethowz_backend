@@ -363,6 +363,7 @@ router.get("/getAllPetServiceList", petserviceController.getAllPetServiceList);
 
 router.get("/getPetServiceById/:pet_services_id", petserviceController.findOne);
 router.get("/getSlotByPetServiceId/:id", petserviceController.getSlotByPetServiceId);
+router.get("/getSlotByPetSpaceId/:id", petserviceController.getSlotByPetSpaceId);
 
 router.get(
   "/getPetServicePendingList",
