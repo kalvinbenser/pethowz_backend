@@ -259,6 +259,7 @@ router.post(
 // --Get Service Master
 router.get("/getAllServiceMaster", serviceMastersController.findAll);
 
+router.get("/getServiceMasterById/:id", aboutUsController.getServiceMasterById);
 router.get("/getAllServiceList", serviceMastersController.getAllServiceList);
 
 // --Update Service Master

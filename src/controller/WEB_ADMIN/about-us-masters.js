@@ -1,6 +1,7 @@
 const db = require("../../model");
 
 const AboutUs = db.aboutUs;
+const ServiceMaster=db.serviceMaster
 const RESPONSE = require("../../constants/response");
 const { MESSAGE } = require("../../constants/messages");
 const { StatusCode } = require("../../constants/HttpStatusCode");
@@ -35,6 +36,26 @@ exports.findOne = (req, res) => {
         res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
       } else {
         RESPONSE.Failure.Message = `Cannot find AboutUs with id=${id}.`;
+        res.status(StatusCode.NOT_FOUND.code).send(RESPONSE.Failure);
+      }
+    })
+    .catch((err) => {
+      RESPONSE.Failure.Message = err.message;
+      res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
+    });
+};
+
+exports.getServiceMasterById = (req, res) => {
+  const id = req.params.id;
+
+  ServiceMaster.findByPk(id)
+    .then((data) => {
+      if (data) {
+        RESPONSE.Success.Message = MESSAGE.SUCCESS;
+        RESPONSE.Success.data = data;
+        res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+      } else {
+        RESPONSE.Failure.Message = `Cannot find PetService with id=${id}.`;
         res.status(StatusCode.NOT_FOUND.code).send(RESPONSE.Failure);
       }
     })
