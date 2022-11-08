@@ -59,6 +59,8 @@ db.selfDescription = require("./MAIN/self-description.model")(
   sequelize,
   Sequelize
 );
+db.petServiceBook=require("./MAIN/pet-service-book.model")(sequelize, Sequelize);
+db.petSpaceBook=require("./MAIN/pet-space-book.model")(sequelize, Sequelize);
 db.registration = require("./MAIN/registration.model")(sequelize, Sequelize);
 db.adminLogin = require("./MAIN/admin-login-masters.model")(sequelize, Sequelize);
 db.serviceSlot =require('./MAIN/service_slot.model')(sequelize, Sequelize);

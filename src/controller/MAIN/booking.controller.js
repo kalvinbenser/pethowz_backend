@@ -1,6 +1,8 @@
 const db = require("../../model");
 
 const Booking = db.booking;
+const PetServiceBook = db.petServiceBook;
+const PetSpaceBook = db.petSpaceBook;
 const RESPONSE = require("../../constants/response");
 const { MESSAGE } = require("../../constants/messages");
 const { StatusCode } = require("../../constants/HttpStatusCode");
@@ -35,7 +37,6 @@ exports.create = async (req, res) => {
     });
 };
 
-
 exports.createPetServiceBooking = async (req, res) => {
   const booking = {
     user_id: req.body.user_id,
@@ -48,11 +49,12 @@ exports.createPetServiceBooking = async (req, res) => {
     service: req.body.service,
     venue_name: req.body.venue_name,
     cost_per_hour: req.body.cost_per_hour,
-    type: 2,
-    status: req.body.status,
+    pet_service_id: req.body.pet_service_id,
+    pet_service_user_id: req.body.pet_service_user_id,
+    status: 1,
   };
 
-  Booking.create(booking)
+  PetServiceBook.create(booking)
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = { id: data.id };
@@ -63,7 +65,6 @@ exports.createPetServiceBooking = async (req, res) => {
       res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
     });
 };
-
 
 exports.createPetSpaceBooking = async (req, res) => {
   const booking = {
@@ -76,12 +77,14 @@ exports.createPetSpaceBooking = async (req, res) => {
     service_type: req.body.service_type,
     service: req.body.service,
     venue_name: req.body.venue_name,
+    venue_category: req.body.venue_category,
     cost_per_hour: req.body.cost_per_hour,
-    type: 1,
-    status: req.body.status,
+    pet_space_id: req.body.pet_space_id,
+    pet_space_user_id: req.body.pet_space_user_id,
+    status: 1,
   };
 
-  Booking.create(booking)
+  PetSpaceBook.create(booking)
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = { id: data.id };
@@ -113,11 +116,10 @@ exports.findOne = (req, res) => {
     });
 };
 
-
 exports.getPetServiceBookingListById = (req, res) => {
   const id = req.params.booking_id;
 
-  Booking.findOne({where:{id:id}})
+  PetServiceBook.findOne({ where: { id: id } })
     .then((data) => {
       if (data) {
         RESPONSE.Success.Message = MESSAGE.SUCCESS;
@@ -133,13 +135,11 @@ exports.getPetServiceBookingListById = (req, res) => {
       res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
     });
 };
-
-
 
 exports.getPetSpaceBookingListById = (req, res) => {
   const id = req.params.booking_id;
 
-  Booking.findOne({where:{id:id}})
+  PetSpaceBook.findOne({ where: { id: id } })
     .then((data) => {
       if (data) {
         RESPONSE.Success.Message = MESSAGE.SUCCESS;
@@ -156,11 +156,70 @@ exports.getPetSpaceBookingListById = (req, res) => {
     });
 };
 
+exports.petSpaceBookByProvider = (req, res) => {
+  const id = req.params.id;
 
-exports.findByUserId = (req, res) => {
-  const id = req.params.user_id;
+  PetSpaceBook.findAll({ where: { pet_space_user_id: id } })
+    .then((data) => {
+      if (data) {
+        RESPONSE.Success.Message = MESSAGE.SUCCESS;
+        RESPONSE.Success.data = data;
+        res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+      } else {
+        RESPONSE.Failure.Message = `Cannot find Booking with id=${id}.`;
+        res.status(StatusCode.NOT_FOUND.code).send(RESPONSE.Failure);
+      }
+    })
+    .catch((err) => {
+      RESPONSE.Failure.Message = err.message;
+      res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
+    });
+};
 
-  Booking.findOne({ where: { user_id: id } })
+exports.petServiceBookByProvider = (req, res) => {
+  const id = req.params.id;
+
+  PetServiceBook.findAll({ where: { pet_service_user_id: id } })
+    .then((data) => {
+      if (data) {
+        RESPONSE.Success.Message = MESSAGE.SUCCESS;
+        RESPONSE.Success.data = data;
+        res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+      } else {
+        RESPONSE.Failure.Message = `Cannot find Booking with id=${id}.`;
+        res.status(StatusCode.NOT_FOUND.code).send(RESPONSE.Failure);
+      }
+    })
+    .catch((err) => {
+      RESPONSE.Failure.Message = err.message;
+      res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
+    });
+};
+
+exports.myPetSpaceOrders = (req, res) => {
+  const id = req.params.id;
+
+  PetSpaceBook.findAll({ where: { user_id: id } })
+    .then((data) => {
+      if (data) {
+        RESPONSE.Success.Message = MESSAGE.SUCCESS;
+        RESPONSE.Success.data = data;
+        res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+      } else {
+        RESPONSE.Failure.Message = `Cannot find Booking with id=${id}.`;
+        res.status(StatusCode.NOT_FOUND.code).send(RESPONSE.Failure);
+      }
+    })
+    .catch((err) => {
+      RESPONSE.Failure.Message = err.message;
+      res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
+    });
+};
+
+exports.myPetServiceOrders = (req, res) => {
+  const id = req.params.id;
+
+  PetServiceBook.findAll({ where: { user_id: id } })
     .then((data) => {
       if (data) {
         RESPONSE.Success.Message = MESSAGE.SUCCESS;
@@ -191,7 +250,7 @@ exports.findAll = (req, res) => {
 };
 
 exports.getPetServiceBookingList = (req, res) => {
-  Booking.findAll({where:{type:2}})
+  PetServiceBook.findAll()
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = data;
@@ -203,9 +262,8 @@ exports.getPetServiceBookingList = (req, res) => {
     });
 };
 
-
 exports.getPetSpaceBookingList = (req, res) => {
-  Booking.findAll({where:{type:1}})
+  PetSpaceBook.findAll()
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = data;
@@ -218,7 +276,7 @@ exports.getPetSpaceBookingList = (req, res) => {
 };
 
 exports.getAllServicesBookingListAdmin = (req, res) => {
-  Booking.findAll({where:{type:2}})
+  PetServiceBook.findAll()
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = data;
@@ -231,7 +289,7 @@ exports.getAllServicesBookingListAdmin = (req, res) => {
 };
 
 exports.getAllVenueBookedListAdmin = (req, res) => {
-  Booking.findAll({where:{type:1}})
+  PetSpaceBook.findAll()
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = data;

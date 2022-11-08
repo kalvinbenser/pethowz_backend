@@ -41,7 +41,7 @@ router.get("/getBookingDetails", bookingController.findAll);
 router.get("/getBookingList", bookingController.findAll);
 
 // --get Booking By user Id
-router.get("/getBookingListByUserId/:user_id", bookingController.findByUserId);
+// router.get("/getBookingListByUserId/:user_id", bookingController.findByUserId);
 
 //-------------------------------------------------------------
 //service booking
@@ -61,7 +61,7 @@ router.get(
 // --Insert Pet Booking Service
 router.post(
   "/createPetServiceBooking",
-  validate(SCHEMA.BOOKING.createPetServiceBooking),
+  validate(SCHEMA.PET_SERVICE_BOOK.createPetServiceBooking),
   bookingController.createPetServiceBooking
 );
 
@@ -81,7 +81,7 @@ router.get(
 // --Insert Pet Booking Space
 router.post(
   "/createPetSpaceBooking",
-  validate(SCHEMA.BOOKING.createPetSpaceBooking),
+  validate(SCHEMA.PET_SPACE_BOOK.createPetSpaceBooking),
   bookingController.createPetSpaceBooking
 );
 
@@ -93,8 +93,30 @@ router.get(
   "/getPetSpaceBookingListById/:booking_id",
   bookingController.getPetSpaceBookingListById
 );
+//--------------------------------Booking details in web app profile------------ 
+router.get(
+  "/getPetSpaceBookByProvider/:id",
+  bookingController.petSpaceBookByProvider
+);
 
-//------------------------------------------------------------
+router.get(
+  "/getPetServiceBookByProvider/:id",
+  bookingController.petServiceBookByProvider
+);
+
+router.get(
+  "/getMyPetSpaceOrders/:id",
+  bookingController.myPetSpaceOrders
+);
+
+router.get(
+  "/getMyPetServiceOrders/:id",
+  bookingController.myPetServiceOrders
+);
+
+
+
+//--------------------------------------------------------------------
 
 //--------------------------Self Description--------------------------------
 //insert self description
