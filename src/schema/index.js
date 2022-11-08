@@ -15,9 +15,13 @@ const ADMIN_LOGIN=require('./MAIN/admin-login-masters.schema')
 
 //main
 const BOOKING = require("./MAIN/booking.schema");
+const PET_SPACE_BOOK=require("./MAIN/pet-space-book.schema")
+const PET_SERVICE_BOOK=require("./MAIN/pet-service-book.schema")
 const REGISTRATION = require("./MAIN/registration.schema");
 const SELF_DESCRIPTION = require("./MAIN/self-description.schema");
 const SERVICE_SLOT=require('./MAIN/service-slot.schema')
 
+
+
 module.exports = { PET_CATEGORY , ABOUT_US , ADMIN_TERMS_AND_CONDITION , AMENITY_MASTERS , OPTIONS_APPLICABLE , PRIVACY_POLICY ,
-    SERVICE_MASTERS , TERMS_AND_CONDITION , VENUE_MASTERS ,  PET_SERVICE , PET_SPACE, BOOKING, REGISTRATION, SELF_DESCRIPTION ,ADMIN_LOGIN,SERVICE_SLOT};
+    SERVICE_MASTERS , TERMS_AND_CONDITION , VENUE_MASTERS ,  PET_SERVICE , PET_SPACE, BOOKING, REGISTRATION, SELF_DESCRIPTION ,ADMIN_LOGIN,SERVICE_SLOT,PET_SPACE_BOOK,PET_SERVICE_BOOK};
