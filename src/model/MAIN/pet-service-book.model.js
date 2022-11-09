@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-    const petServiceBook = sequelize.define("petServiceBook", {
+    const petServiceBook = sequelize.define("petservicebook", {
       user_id: {
         type: Sequelize.STRING,
         allowNull: false,
