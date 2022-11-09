@@ -94,13 +94,15 @@ router.get(
   bookingController.getPetSpaceBookingListById
 );
 //--------------------------------Booking details in web app profile------------ 
-router.get(
-  "/getPetSpaceBookByProvider/:id",
+router.post(
+  "/getPetSpaceBookByProvider",
+  validate(SCHEMA.PET_SPACE_BOOK.getPetSpaceBooking),
   bookingController.petSpaceBookByProvider
 );
 
-router.get(
-  "/getPetServiceBookByProvider/:id",
+router.post(
+  "/getPetServiceBookByProvider",
+  validate(SCHEMA.PET_SERVICE_BOOK.getPetServiceBooking),
   bookingController.petServiceBookByProvider
 );
 

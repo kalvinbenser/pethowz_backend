@@ -13,25 +13,12 @@ const createPetServiceBooking = yup.object({
     venue_name: yup.string().required(),
     cost_per_hour: yup.number().required(),
     pet_service_id: yup.number().required(),
-    pet_service_user_id: yup.number().required(),
-   
   }),
 });
 
-const updatePetServiceBooking = yup.object({
+const getPetServiceBooking = yup.object({
     body: yup.object({
-      user_id: yup.string().notRequired(),
-      name: yup.string().notRequired(),
-      contact_number: yup.string().notRequired(),
-      pet_name: yup.string().notRequired(),
-      pet_count: yup.number().notRequired(),
-      days: yup.number().notRequired(),
-      service_type: yup.string().notRequired(),
-      service: yup.array().notRequired(),
-      venue_name: yup.string().notRequired(),
-      cost_per_hour: yup.number().notRequired(),
-      pet_service_id: yup.number().notRequired(),
-      pet_service_user_id: yup.number().notRequired(),
+      user_id: yup.string().required(),
      
     }),
   });
@@ -39,4 +26,4 @@ const updatePetServiceBooking = yup.object({
   
 
 
-module.exports = { createPetServiceBooking,updatePetServiceBooking};
+module.exports = { createPetServiceBooking,getPetServiceBooking};

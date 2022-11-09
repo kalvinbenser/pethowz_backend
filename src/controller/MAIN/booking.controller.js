@@ -8,7 +8,7 @@ const { MESSAGE } = require("../../constants/messages");
 const { StatusCode } = require("../../constants/HttpStatusCode");
 
 // const Op = db.Sequelize.Op;
-
+const sequelize = db.sequelize;
 exports.create = async (req, res) => {
   const booking = {
     user_id: req.body.user_id,
@@ -50,7 +50,6 @@ exports.createPetServiceBooking = async (req, res) => {
     venue_name: req.body.venue_name,
     cost_per_hour: req.body.cost_per_hour,
     pet_service_id: req.body.pet_service_id,
-    pet_service_user_id: req.body.pet_service_user_id,
     status: 1,
   };
 
@@ -80,7 +79,6 @@ exports.createPetSpaceBooking = async (req, res) => {
     venue_category: req.body.venue_category,
     cost_per_hour: req.body.cost_per_hour,
     pet_space_id: req.body.pet_space_id,
-    pet_space_user_id: req.body.pet_space_user_id,
     status: 1,
   };
 
@@ -157,18 +155,16 @@ exports.getPetSpaceBookingListById = (req, res) => {
 };
 
 exports.petSpaceBookByProvider = (req, res) => {
-  const id = req.params.id;
+  const id = req.body.user_id;
 
-  PetSpaceBook.findAll({ where: { pet_space_user_id: id } })
+  sequelize
+    .query(
+      `select psb.name,psb.id from petspacebook psb left join pet_space ps on ps.id=psb.pet_space_id where ps.user_id='${id}'`
+    )
     .then((data) => {
-      if (data) {
-        RESPONSE.Success.Message = MESSAGE.SUCCESS;
-        RESPONSE.Success.data = data;
-        res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
-      } else {
-        RESPONSE.Failure.Message = `Cannot find Booking with id=${id}.`;
-        res.status(StatusCode.NOT_FOUND.code).send(RESPONSE.Failure);
-      }
+      RESPONSE.Success.Message = MESSAGE.SUCCESS;
+      RESPONSE.Success.data = data[0];
+      res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
     })
     .catch((err) => {
       RESPONSE.Failure.Message = err.message;
@@ -177,18 +173,16 @@ exports.petSpaceBookByProvider = (req, res) => {
 };
 
 exports.petServiceBookByProvider = (req, res) => {
-  const id = req.params.id;
+  const id = req.body.user_id;
 
-  PetServiceBook.findAll({ where: { pet_service_user_id: id } })
+  sequelize
+    .query(
+      `select psb.name,psb.id from petservicebook psb left join pet_service ps on ps.id=psb.pet_service_id where ps.user_id='${id}'`
+    )
     .then((data) => {
-      if (data) {
-        RESPONSE.Success.Message = MESSAGE.SUCCESS;
-        RESPONSE.Success.data = data;
-        res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
-      } else {
-        RESPONSE.Failure.Message = `Cannot find Booking with id=${id}.`;
-        res.status(StatusCode.NOT_FOUND.code).send(RESPONSE.Failure);
-      }
+      RESPONSE.Success.Message = MESSAGE.SUCCESS;
+      RESPONSE.Success.data = data[0];
+      res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
     })
     .catch((err) => {
       RESPONSE.Failure.Message = err.message;
