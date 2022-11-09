@@ -106,7 +106,7 @@ exports.getAllServiceList = (req, res) => {
 exports.getServiceProvidersFilter = async (req, res) => {
   const keyword = req.body.service_keyword;
 
-  var query = `select ps.id as id,sm.service_name as service_name,ps.venue_name,ps.image,ss.cost,ss.type as type from service_slot ss left join service_master sm on sm.id=ss.service_master_id left join pet_service  as ps on ps.id=ss.pet_service_id where sm.service_name like "%${keyword}%"`;
+  var query = `select ps.id as id,sm.service_name as service_name,ps.venue_name,ps.image,ss.cost,ss.type as type from service_slot ss left join service_master sm on sm.id=ss.service_master_id left join pet_service  as ps on ps.id=ss.pet_service_id   where ps.status=1 and sm.service_name like "%${keyword}%"`;
   sequelize
     .query(query)
     .then((result) => {

@@ -9,7 +9,6 @@ const createPetSpaceBooking = yup.object({
     pet_count: yup.number().required(),
     days: yup.number().required(),
     service_type: yup.string().required(),
-    service: yup.array().required(),
     venue_name: yup.string().required(),
     cost_per_hour: yup.number().required(),
     pet_space_id: yup.number().required(),
