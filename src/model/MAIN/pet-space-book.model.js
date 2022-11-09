@@ -52,11 +52,6 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: false,
        
       },
-      pet_space_user_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-       
-      },
       status: {
         type: Sequelize.BOOLEAN,
         allowNull: false,
