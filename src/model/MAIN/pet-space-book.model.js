@@ -30,7 +30,7 @@ module.exports = (sequelize, Sequelize) => {
       },
       service: {
         type: Sequelize.TEXT,
-        allowNull: false,
+        allowNull: true,
         get() {
           return JSON.parse(this.getDataValue("service"));
         },
