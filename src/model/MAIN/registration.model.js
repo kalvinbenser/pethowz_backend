@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const registration = sequelize.define("Registration", {
+  const registration = sequelize.define("registration", {
     user_id: {
       type: Sequelize.STRING,
       allowNull: false,
