@@ -18,8 +18,11 @@ exports.create = async(req, res) => {
     location: req.body.location,
     image: req.body.image,
    };
+   const service_p=req.body.service
 
- let pet_Space_data=[]
+
+  if(service_p.length>0){
+let pet_Space_data=[]
 
  await PetSpace.create(pet_space)
   .then((data) => {
@@ -65,6 +68,21 @@ exports.create = async(req, res) => {
     RESPONSE.Failure.Message = err.message;
     res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
   });
+  } 
+  else{
+    await PetSpace.create(pet_space)
+    .then((data) => {
+      RESPONSE.Success.Message = MESSAGE.SUCCESS;
+      RESPONSE.Success.data = data ;
+      res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+    })
+    .catch((err) => {
+      RESPONSE.Failure.Message = err.message;
+      res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
+    
+    });
+  }
+ 
 };
 
 
