@@ -390,7 +390,7 @@ router.get("/getPetServiceById/:pet_services_id", petserviceController.findOne);
 router.get("/getSlotByPetServiceId/:id", petserviceController.getSlotByPetServiceId);
 router.get("/getSlotByPetSpaceId/:id", petserviceController.getSlotByPetSpaceId);
 
-router.get(
+router.post(
   "/getPetServicePendingList",
   petserviceController.getPetServicePendingList
 );
@@ -441,7 +441,7 @@ router.get("/getAllPetSpace", petSpaceController.findAll);
 router.get("/getAllPetSpaceList", petSpaceController.getAllPetSpaceList);
 router.get("/getPetSpaceById/:id", petSpaceController.findOne);
 //pet space pending list
-router.get(
+router.post(
   "/getPetSpacePendingList",
   petSpaceController.getPetSpacePendingList
 );

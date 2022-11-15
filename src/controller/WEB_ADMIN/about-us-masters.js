@@ -1,12 +1,12 @@
 const db = require("../../model");
 
 const AboutUs = db.aboutUs;
-const ServiceMaster=db.serviceMaster
+const ServiceMaster = db.serviceMaster;
 const RESPONSE = require("../../constants/response");
 const { MESSAGE } = require("../../constants/messages");
 const { StatusCode } = require("../../constants/HttpStatusCode");
 
-// const Op = db.Sequelize.Op;
+const Op = db.Sequelize.Op;
 
 exports.create = async (req, res) => {
   const about_us = {
@@ -14,7 +14,8 @@ exports.create = async (req, res) => {
   };
 
   AboutUs.create(about_us)
-    .then((data) => {
+    .then(async (data) => {
+      await inActiveOldAboutUs(data.id);
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = { id: data.id };
       res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
@@ -23,6 +24,33 @@ exports.create = async (req, res) => {
       RESPONSE.Failure.Message = err.message;
       res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
     });
+};
+
+const inActiveOldAboutUs = async (id) => {
+  console.log("id", id);
+  return new Promise((resolve) => {
+    AboutUs.update(
+      { isActive: false },
+      {
+        where: {
+          id: {
+            [Op.ne]: id,
+          },
+        },
+      }
+    )
+      .then((num) => {
+        console.log("num", num);
+        if (num == 1) {
+          resolve(1);
+        } else {
+          resolve(0);
+        }
+      })
+      .catch((err) => {
+        resolve(0);
+      });
+  });
 };
 
 exports.findOne = (req, res) => {
@@ -66,7 +94,7 @@ exports.getServiceMasterById = (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  AboutUs.findAll()
+  AboutUs.findOne({ where: { isActive: true } })
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = data;

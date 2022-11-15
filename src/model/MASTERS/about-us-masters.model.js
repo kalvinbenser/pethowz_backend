@@ -4,6 +4,11 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
       allowNull: false,
     },
+    isActive: {
+      type: Sequelize.BOOLEAN,
+      allowNull: false,
+      defaultValue: 1,
+    },
     createdAt: {
       type: Sequelize.DATE,
       allowNull: true,
