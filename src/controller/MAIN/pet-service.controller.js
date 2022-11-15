@@ -6,7 +6,8 @@ const sequelize = db.sequelize;
 const RESPONSE = require("../../constants/response");
 const { MESSAGE } = require("../../constants/messages");
 const { StatusCode } = require("../../constants/HttpStatusCode");
-// const Op = db.Sequelize.Op;
+ const Op = db.Sequelize.Op;
+ 
 
 exports.create = async (req, res) => {
   const pet_service = {
@@ -72,7 +73,8 @@ exports.getAllPetServiceList = (req, res) => {
 };
 
 exports.getPetServicePendingList = (req, res) => {
-  PetService.findAll({ where: { status: 0 } })
+  const status = req.body.status;
+  PetService.findAll({ where: { status: status } })
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = data;
@@ -86,7 +88,7 @@ exports.getPetServicePendingList = (req, res) => {
 
 exports.getPetServicePendingListById = (req, res) => {
   id = req.params.pet_services_id;
-  PetService.findOne({ where: { status: 0, id: id } })
+  PetService.findOne({ where: { id: id } })
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = data;
@@ -132,7 +134,7 @@ exports.getSlotByPetServiceId = (req, res) => {
 exports.getSlotByPetSpaceId = async (req, res) => {
   id = req.params.id;
   const service_id = await getSlotpetServiceById(id);
-//console.log("service_id",service_id)
+  //console.log("service_id",service_id)
   if (service_id != 0) {
     sequelize
       .query(
@@ -140,7 +142,7 @@ exports.getSlotByPetSpaceId = async (req, res) => {
       )
       .then((data) => {
         RESPONSE.Success.Message = MESSAGE.SUCCESS;
-        console.log("data",data)
+        console.log("data", data);
         RESPONSE.Success.data = data[0];
         res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
       })
@@ -150,9 +152,9 @@ exports.getSlotByPetSpaceId = async (req, res) => {
         res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
       });
   } else {
-        RESPONSE.Success.Message = MESSAGE.SUCCESS;
-        RESPONSE.Success.data = [];
-        res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+    RESPONSE.Success.Message = MESSAGE.SUCCESS;
+    RESPONSE.Success.data = [];
+    res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
   }
 };
 
@@ -242,34 +244,28 @@ exports.updateAdminApprovedPetServiceMaster = (req, res) => {
 };
 
 exports.serviceApproval = (req, res) => {
-  let updateBody;
-  const approvalType = req.body.type;
+  const type = req.body.type;
   const service_id = req.body.service_id;
-  console.log("service_id", service_id);
-  if (approvalType === "approval") {
-    updateBody = { status: 1 };
+  console.log("type", type);
+  let status=0;
+  if(type=='reject'){
+    status=2
   }
-  if (approvalType === "reject") {
-    updateBody = { status: 2 };
+  else if(type=='approval'){
+    status=1
   }
-  PetService.update(updateBody, {
-    where: { id: service_id },
+  else{
+    status=0
+  }
+  sequelize.query(`update pet_service set status=${status} where id=${service_id}`).then((data)=>{
+    RESPONSE.Success.Message = MESSAGE.SUCCESS;
+    RESPONSE.Success.data = [];
+    res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+  }).catch((err)=>{
+    RESPONSE.Failure.Message = `Cannot find PetSpace with service_id=${service_id}.`;
+      res.status(StatusCode.NOT_FOUND.code).send(RESPONSE.Failure);
   })
-    .then((num) => {
-      console.log("num", num);
-      if (num == 1) {
-        RESPONSE.Success.Message = "Pet Service was updated successfully.";
-        RESPONSE.Success.data = { id: service_id };
-        res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
-      } else {
-        RESPONSE.Failure.Message = `Cannot update Pet Service with id=${service_id}. Maybe Pet Service was not found or req.body is empty!`;
-        res.status(StatusCode.NOT_FOUND.code).send(RESPONSE.Failure);
-      }
-    })
-    .catch((err) => {
-      RESPONSE.Failure.Message = err.message;
-      res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
-    });
+
 };
 
 exports.delete = (req, res) => {

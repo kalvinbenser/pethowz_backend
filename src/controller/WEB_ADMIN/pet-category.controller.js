@@ -89,7 +89,7 @@ exports.delete = (req, res) => {
 
 
 exports.getAllPetCategoryList = (req, res) => {
-  Category.findAll({where:{isActive:true}})
+  Category.findAll()
   .then((data) => {
     RESPONSE.Success.Message = MESSAGE.SUCCESS;
     RESPONSE.Success.data = data;

@@ -1,5 +1,5 @@
 const db = require("../../model");
-const AdminTermsAndCondition = db.adminTermsAndCondition;
+const AdminTermsAndCondition = db.termsAndCondition;
 
 const RESPONSE = require("../../constants/response");
 const { MESSAGE } = require("../../constants/messages");
@@ -24,8 +24,9 @@ exports.create = async (req, res) => {
 };
 
 exports.findAll = (req, res) => {
-  AdminTermsAndCondition.findAll()
+  AdminTermsAndCondition.findOne({where:{isActive:true}})
     .then((data) => {
+      console.log("terms",data)
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = data;
       res.status(StatusCode.CREATED.code).send(RESPONSE.Success);

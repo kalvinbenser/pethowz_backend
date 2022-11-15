@@ -4,7 +4,7 @@ const PrivacyPolicy = db.privacyPolicy;
 const RESPONSE = require("../../constants/response");
 const { MESSAGE } = require("../../constants/messages");
 const { StatusCode } = require("../../constants/HttpStatusCode");
-// const Op = db.Sequelize.Op;
+const Op = db.Sequelize.Op;
 
 exports.create = async (req, res) => {
  
@@ -14,7 +14,8 @@ exports.create = async (req, res) => {
 
  
   PrivacyPolicy.create(privacy_policy)
-  .then((data) => {
+  .then(async(data) => {
+  await  inActiveOldPrivacy(data.id)
     RESPONSE.Success.Message = MESSAGE.SUCCESS;
     RESPONSE.Success.data = { id: data.id };
     res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
@@ -26,10 +27,36 @@ exports.create = async (req, res) => {
 };
 
 
+const inActiveOldPrivacy = async (id) => {
+  console.log("id", id);
+  return new Promise((resolve) => {
+    PrivacyPolicy.update(
+      { isActive: false },
+      {
+        where: {
+          id: {
+            [Op.ne]: id,
+          },
+        },
+      }
+    )
+      .then((num) => {
+        console.log("num", num);
+        if (num == 1) {
+          resolve(1);
+        } else {
+          resolve(0);
+        }
+      })
+      .catch((err) => {
+        resolve(0);
+      });
+  });
+};
 exports.findAll = (req, res) => {
  
 
-    PrivacyPolicy.findAll()
+    PrivacyPolicy.findOne({where:{isActive:true}})
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = data;
