@@ -9,7 +9,7 @@ const { StatusCode } = require("../../constants/HttpStatusCode");
 
 exports.create = async (req, res) => {
   const service_master = {
-    name: req.body.name,
+    service_name: req.body.service_name,
     isActive: req.body.isActive,
     image: req.body.image 
   };
@@ -43,7 +43,7 @@ exports.findAll = (req, res) => {
 exports.update = async (req, res) => {
   const id = req.body.service_id;
   const service_master = {
-    name: req.body.name,
+    service_name: req.body.service_name,
     isActive: req.body.isActive,
     image: req.body.image,
   };
