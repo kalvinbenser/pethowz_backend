@@ -1,7 +1,7 @@
 module.exports = (sequelize, Sequelize) => {
     const serviceMaster = sequelize.define("service_master", {
         
-        name: {
+        service_name: {
             type: Sequelize.STRING,
             allowNull: false,
         },
