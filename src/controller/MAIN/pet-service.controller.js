@@ -6,8 +6,7 @@ const sequelize = db.sequelize;
 const RESPONSE = require("../../constants/response");
 const { MESSAGE } = require("../../constants/messages");
 const { StatusCode } = require("../../constants/HttpStatusCode");
- const Op = db.Sequelize.Op;
- 
+const Op = db.Sequelize.Op;
 
 exports.create = async (req, res) => {
   const pet_service = {
@@ -91,7 +90,7 @@ exports.getPetServicePendingListById = (req, res) => {
   PetService.findOne({ where: { id: id } })
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
-      RESPONSE.Success.data = data;
+      RESPONSE.Success.data = [data];
       res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
     })
     .catch((err) => {
@@ -247,25 +246,25 @@ exports.serviceApproval = (req, res) => {
   const type = req.body.type;
   const service_id = req.body.service_id;
   console.log("type", type);
-  let status=0;
-  if(type=='reject'){
-    status=2
+  let status = 0;
+  if (type == "reject") {
+    status = 2;
+  } else if (type == "approval") {
+    status = 1;
+  } else {
+    status = 0;
   }
-  else if(type=='approval'){
-    status=1
-  }
-  else{
-    status=0
-  }
-  sequelize.query(`update pet_service set status=${status} where id=${service_id}`).then((data)=>{
-    RESPONSE.Success.Message = MESSAGE.SUCCESS;
-    RESPONSE.Success.data = [];
-    res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
-  }).catch((err)=>{
-    RESPONSE.Failure.Message = `Cannot find PetSpace with service_id=${service_id}.`;
+  sequelize
+    .query(`update pet_service set status=${status} where id=${service_id}`)
+    .then((data) => {
+      RESPONSE.Success.Message = MESSAGE.SUCCESS;
+      RESPONSE.Success.data = [];
+      res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+    })
+    .catch((err) => {
+      RESPONSE.Failure.Message = `Cannot find PetSpace with service_id=${service_id}.`;
       res.status(StatusCode.NOT_FOUND.code).send(RESPONSE.Failure);
-  })
-
+    });
 };
 
 exports.delete = (req, res) => {

@@ -191,7 +191,7 @@ exports.findOne = (req, res) => {
     .then((data) => {
       if (data) {
         RESPONSE.Success.Message = MESSAGE.SUCCESS;
-        RESPONSE.Success.data = data;
+        RESPONSE.Success.data = [data];
         res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
       } else {
         RESPONSE.Failure.Message = `Cannot find PetSpace with id=${id}.`;
