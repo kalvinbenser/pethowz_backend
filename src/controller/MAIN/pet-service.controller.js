@@ -2,6 +2,9 @@ const db = require("../../model");
 const PetService = db.petService;
 const ServiceSlot = db.serviceSlot;
 const sequelize = db.sequelize;
+const Self = db.selfDescription;
+const Register = db.registration;
+const Slot = db.serviceSlot;
 
 const RESPONSE = require("../../constants/response");
 const { MESSAGE } = require("../../constants/messages");
@@ -85,18 +88,33 @@ exports.getPetServicePendingList = (req, res) => {
     });
 };
 
-exports.getPetServicePendingListById = (req, res) => {
+exports.getPetServicePendingListById = async (req, res) => {
   id = req.params.pet_services_id;
-  PetService.findOne({ where: { id: id } })
-    .then((data) => {
-      RESPONSE.Success.Message = MESSAGE.SUCCESS;
-      RESPONSE.Success.data = [data];
-      res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
-    })
-    .catch((err) => {
-      RESPONSE.Failure.Message = err.message;
-      res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
+
+  const data = await PetService.findOne({ where: { id: id }, raw: true });
+  const slot = await sequelize.query(
+    `select ss.id,sm.service_name,ss.cost from service_slot ss left join service_master sm on sm.id=ss.service_master_id where ss.pet_service_id=${id};`
+  );
+
+  if (data) {
+    const regData = await Register.findOne({
+      where: { user_id: data.user_id },
     });
+    const selfData = await Self.findOne({ where: { user_id: data.user_id } });
+
+    data.RegistrationDetails = regData;
+    data.SelfDescriptionDetails = selfData;
+    data.Slot = slot[0];
+
+    data.image = JSON.parse(data.image);
+    RESPONSE.Success.Message = MESSAGE.SUCCESS;
+    RESPONSE.Success.data = [data];
+    res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+  } else {
+    RESPONSE.Success.Message = MESSAGE.SUCCESS;
+    RESPONSE.Success.data = [];
+    res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+  }
 };
 
 exports.getPetServiceMobileListById = (req, res) => {

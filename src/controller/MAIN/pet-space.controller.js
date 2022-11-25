@@ -1,12 +1,15 @@
 const db = require("../../model");
 const PetSpace = db.petSpace;
 const PetService = db.petService;
+const Self = db.selfDescription;
+const Register = db.registration;
 const ServiceSlot = db.serviceSlot;
 const sequelize = db.sequelize;
 
 const RESPONSE = require("../../constants/response");
 const { MESSAGE } = require("../../constants/messages");
 const { StatusCode } = require("../../constants/HttpStatusCode");
+const { object } = require("yup");
 // const Op = db.Sequelize.Op;
 
 exports.create = async (req, res) => {
@@ -184,24 +187,41 @@ exports.venueApproval = (req, res) => {
     });
 };
 
-exports.findOne = (req, res) => {
+exports.findOne = async (req, res) => {
   const id = req.params.id;
 
-  PetSpace.findByPk(id)
-    .then((data) => {
-      if (data) {
-        RESPONSE.Success.Message = MESSAGE.SUCCESS;
-        RESPONSE.Success.data = [data];
-        res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
-      } else {
-        RESPONSE.Failure.Message = `Cannot find PetSpace with id=${id}.`;
-        res.status(StatusCode.NOT_FOUND.code).send(RESPONSE.Failure);
-      }
-    })
-    .catch((err) => {
-      RESPONSE.Failure.Message = err.message;
-      res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
+  const data = await PetSpace.findOne({ where: { id: id }, raw: true });
+  const petService = await PetService.findOne({ where: { pet_space_id: id } });
+
+  if (petService?.id) {
+    const slot = await sequelize.query(
+      `select ss.id,sm.service_name,ss.cost from service_slot ss left join service_master sm on sm.id=ss.service_master_id where ss.pet_service_id=${petService.id};`
+    );
+    data.Slot = slot[0];
+  } else {
+    data.Slot = [];
+  }
+
+  if (data) {
+    const regData = await Register.findOne({
+      where: { user_id: data.user_id },
     });
+    const selfData = await Self.findOne({ where: { user_id: data.user_id } });
+
+    data.RegistrationDetails = regData;
+    data.SelfDescriptionDetails = selfData;
+
+    data.venue_category = JSON.parse(data.venue_category);
+    data.amenities = JSON.parse(data.amenities);
+    data.image = JSON.parse(data.image);
+    RESPONSE.Success.Message = MESSAGE.SUCCESS;
+    RESPONSE.Success.data = [data];
+    res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+  } else {
+    RESPONSE.Success.Message = MESSAGE.SUCCESS;
+    RESPONSE.Success.data = [];
+    res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+  }
 };
 
 exports.update = (req, res) => {
