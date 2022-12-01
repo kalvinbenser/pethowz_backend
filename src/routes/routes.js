@@ -93,7 +93,7 @@ router.get(
   "/getPetSpaceBookingListById/:booking_id",
   bookingController.getPetSpaceBookingListById
 );
-//--------------------------------Booking details in web app profile------------ 
+//--------------------------------Booking details in web app profile------------
 router.post(
   "/getPetSpaceBookByProvider",
   validate(SCHEMA.PET_SPACE_BOOK.getPetSpaceBooking),
@@ -106,17 +106,9 @@ router.post(
   bookingController.petServiceBookByProvider
 );
 
-router.get(
-  "/getMyPetSpaceOrders/:id",
-  bookingController.myPetSpaceOrders
-);
+router.get("/getMyPetSpaceOrders/:id", bookingController.myPetSpaceOrders);
 
-router.get(
-  "/getMyPetServiceOrders/:id",
-  bookingController.myPetServiceOrders
-);
-
-
+router.get("/getMyPetServiceOrders/:id", bookingController.myPetServiceOrders);
 
 //--------------------------------------------------------------------
 
@@ -279,7 +271,6 @@ router.post(
   serviceMastersController.getServiceProvidersFilter
 );
 
-
 // --Get Service Master
 router.get("/getAllServiceMaster", serviceMastersController.findAll);
 
@@ -387,8 +378,14 @@ router.get("/getAllPetService", petserviceController.findAll);
 router.get("/getAllPetServiceList", petserviceController.getAllPetServiceList);
 
 router.get("/getPetServiceById/:pet_services_id", petserviceController.findOne);
-router.get("/getSlotByPetServiceId/:id", petserviceController.getSlotByPetServiceId);
-router.get("/getSlotByPetSpaceId/:id", petserviceController.getSlotByPetSpaceId);
+router.get(
+  "/getSlotByPetServiceId/:id",
+  petserviceController.getSlotByPetServiceId
+);
+router.get(
+  "/getSlotByPetSpaceId/:id",
+  petserviceController.getSlotByPetSpaceId
+);
 
 router.post(
   "/getPetServicePendingList",
@@ -504,7 +501,6 @@ router.put(
 router.get("/getServiceSlotList", serviceSlotController.findAll);
 router.get("/getServiceSlotById/:id", serviceSlotController.findOne);
 
-
 //-----------------------------------------------------------------------
 
 //-----------------------SearchVenueAndService----------------------------------//
@@ -513,11 +509,15 @@ router.post("/searchVenueAndService", searchController.getSearchHandler);
 
 router.post(
   "/createAdminLogin",
-   validate(SCHEMA.ADMIN_LOGIN.createAdminLoginSchema),
-    adminLoginController.create 
-    );
+  validate(SCHEMA.ADMIN_LOGIN.createAdminLoginSchema),
+  adminLoginController.create
+);
 
 //---get By Id Admin Login
-router.post("/getAdminLogin", adminLoginController.getAdminLogin)
+router.post(
+  "/getAdminLogin",
+  validate(SCHEMA.ADMIN_LOGIN.getAdminLoginSchema),
+  adminLoginController.getAdminLogin
+);
 //-------------------------------------------------
 module.exports = router;
