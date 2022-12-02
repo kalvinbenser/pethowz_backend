@@ -10,7 +10,7 @@ const RESPONSE = require("../../constants/response");
 const { MESSAGE } = require("../../constants/messages");
 const { StatusCode } = require("../../constants/HttpStatusCode");
 const { object } = require("yup");
-// const Op = db.Sequelize.Op;
+const Op = db.Sequelize.Op;
 
 exports.create = async (req, res) => {
   const pet_space = {
@@ -126,6 +126,30 @@ exports.getPetSpacePendingList = (req, res) => {
 exports.getPetSpaceMobileListById = (req, res) => {
   id = req.params.user_id;
   PetSpace.findAll({ where: { user_id: id } })
+    .then((data) => {
+      RESPONSE.Success.Message = MESSAGE.SUCCESS;
+      RESPONSE.Success.data = data;
+      res.status(StatusCode.CREATED.code).send(RESPONSE.Success);
+    })
+    .catch((err) => {
+      RESPONSE.Failure.Message = err.message;
+      res.status(StatusCode.SERVER_ERROR.code).send(RESPONSE.Failure);
+    });
+};
+// Independent House","Apartment
+exports.getIndependentHouseApartment = (req, res) => {
+  const text1 = "Independent";
+  const text2= "Apartment";
+  PetSpace.findAll({
+    where: {
+      venue_category: {
+        [Op.like]: `%${text1}%`,
+        [Op.like]: `%${text2}%`,
+      },
+      isActive:true,
+      delStatus:false
+    },
+  })
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = data;
