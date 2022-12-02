@@ -401,10 +401,10 @@ router.get(
   petserviceController.getPetServiceMobileListById
 );
 
-router.get(
-  "/getPetServiceMobileListById/:user_id",
-  petserviceController.getPetServiceMobileListById
-);
+// router.get(
+//   "/getPetServiceMobileListById/:user_id",
+//   petserviceController.getPetServiceMobileListById
+// );
 
 // --update Pet  Service By Id
 router.put(
