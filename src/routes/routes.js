@@ -448,6 +448,11 @@ router.get(
   petSpaceController.getPetSpaceMobileListById
 );
 
+router.get(
+  "/getIndependentHouseApartment",
+  petSpaceController.getIndependentHouseApartment
+);
+
 // --update Pet  Space By Id
 router.put(
   "/updatePetSpace",
