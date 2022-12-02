@@ -119,7 +119,7 @@ exports.getPetServicePendingListById = async (req, res) => {
 
 exports.getPetServiceMobileListById = (req, res) => {
   id = req.params.user_id;
-  PetService.findAll({ where: { user_id: id } })
+  PetService.findAll({ where: { user_id: id, pet_space_id: 0 } })
     .then((data) => {
       RESPONSE.Success.Message = MESSAGE.SUCCESS;
       RESPONSE.Success.data = data;
